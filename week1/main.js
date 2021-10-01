@@ -26,12 +26,12 @@ app.get("/classification", (req, res) => {
     windowshide: false,
   }; // 터미널 환경 zsh
 
-  /* var command = "conda run -n node python classification.py -i uploads/image/"; // 커맨드 : 가상환경명 NODE에서 ARGS -i 추가
+  var command = "conda run -n node python classification.py --i uploads/image"; // 커맨드 : 가상환경명 NODE에서 ARGS -i 추가
   exec(command, (err, stdout, stderr) => {
     if (err) {
       throw err;
     }
-   });*/
+   });
   var checker = chokidar.watch("output.json", {
     persistent: true,
   });
