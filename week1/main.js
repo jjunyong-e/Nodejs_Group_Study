@@ -3,7 +3,15 @@ var express = require("express");
 var app = express();
 // 파일업로드 : multer
 var multer = require("multer");
-var upload = multer({ dest: "uploads/image" }); // 업로드 경로
+var storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './uploads/image');
+    },
+    filename: function (req, file, callback) {
+        callback(null, file.originalname);
+    }
+});
+var upload = multer({ storage: storage }).single('attachments');
 // 정적파일 접근용 미들웨어 : serve-static
 var static = require("serve-static");
 // 터미널 접근용 : child process
@@ -18,7 +26,20 @@ app.set("view engine", "ejs");
 app.get("/", (req, res) => {
   res.render("uploadPic");
 });
-
+app.post('/upload', function(req, res){
+// var FileName = req.file.filename;
+upload(req, res, function (err) {
+        if (err) {
+            console.log(err)
+        } else {
+            var FileName = req.file.filename;
+            res.status(200).send(FileName);
+        }
+    })
+//   res.status(200).send(FileName);
+  res.writeHead(302,{Location : '/classification'})
+  res.end()
+});
 app.get("/classification", (req, res) => {
   var exec = child.exec;
   var options = {
